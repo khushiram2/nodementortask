@@ -87,5 +87,18 @@ app.post('/students', async (req, res) => {
     }
   });
 
+  //get all students unassigned to a mentor
+  app.get('/students/unassigned', async (req, res) => {
+    try {
+      const students = await client
+      .db("school")
+      .collection("students")
+      .find({ mentor:{ $exists: false } }).toArray();
+      res.json(students);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch students for mentor' });
+    }
+  });
+
 
 app.listen(port, () => console.log("server started on ", port))
